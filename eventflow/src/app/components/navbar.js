@@ -3,7 +3,7 @@ import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@cl
 const Navbar = () => {
   return (
     <nav className="w-full p-4 flex justify-between items-center bg-transparent fixed z-10">
-      <h1 className="text-white text-2xl font-bold">
+      <h1 className="text-white text-2xl font-bold user-select: none">
         Event<span className="text-[#6a2c62]">FLOW</span>
       </h1>
 
