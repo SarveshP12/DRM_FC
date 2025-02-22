@@ -5,9 +5,6 @@ import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@cl
 
 const Navbar = () => {
   return (
-    <nav className="w-full p-4 flex justify-between items-center bg-transparent fixed z-10">
-      <h1 className="text-white text-2xl font-bold user-select: none">
-        Event<span className="text-[#6a2c62]">FLOW</span>
     <nav className="w-full max-w-7xl mx-auto p-4 flex justify-between items-center bg-transparent fixed top-6 left-1/2 transform -translate-x-1/2 px-10 border-2 border-[#A0B4E5] rounded-full shadow-md">
       
       {/* Logo */}
@@ -36,14 +33,12 @@ const Navbar = () => {
 
         <SignedOut>
           <SignUpButton mode="modal">
-            <button
-              className="bg-[#6a2c62] text-white px-4 py-2 rounded-md hover:bg-[#4a1e4a] transition-colors">
+            <button className="bg-[#6a2c62] text-white px-4 py-2 rounded-md hover:bg-[#4a1e4a] transition-colors">
               Sign Up
             </button>
           </SignUpButton>
           <SignInButton mode="modal">
-            <button
-              className="bg-transparent border border-[#6a2c62] text-[#6a2c62] px-4 py-2 rounded-md hover:bg-[#6a2c62] hover:text-white transition-colors">
+            <button className="bg-transparent border border-[#6a2c62] text-[#6a2c62] px-4 py-2 rounded-md hover:bg-[#6a2c62] hover:text-white transition-colors">
               Login
             </button>
           </SignInButton>
