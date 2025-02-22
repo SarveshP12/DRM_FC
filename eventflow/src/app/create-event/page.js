@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/navbar";
+import L from "leaflet"; // Import Leaflet
+import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 
 export default function CreateEvent() {
   const [eventName, setEventName] = useState("");
@@ -9,6 +11,45 @@ export default function CreateEvent() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [requireApproval, setRequireApproval] = useState(false);
+
+  // Leaflet Map Refs
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+
+  // Initialize Map
+  useEffect(() => {
+    if (!mapRef.current) {
+      // Create the map
+      mapRef.current = L.map("map").setView([51.505, -0.09], 13); // Default to London
+
+      // Add the tile layer (OpenStreetMap)
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '© OpenStreetMap contributors',
+      }).addTo(mapRef.current);
+
+      // Add a default marker
+      markerRef.current = L.marker([51.505, -0.09]).addTo(mapRef.current);
+    }
+  }, []);
+
+  // Update Map Location When Location Input Changes
+  useEffect(() => {
+    if (location && mapRef.current && markerRef.current) {
+      // Geocode the address using Nominatim (OpenStreetMap)
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.length > 0) {
+            const { lat, lon } = data[0];
+            mapRef.current.setView([lat, lon], 13); // Set map view to the new location
+            markerRef.current.setLatLng([lat, lon]); // Move the marker to the new location
+          }
+        })
+        .catch((error) => {
+          console.error("Error geocoding location:", error);
+        });
+    }
+  }, [location]);
 
   const handleCreateEvent = () => {
     console.log({
@@ -23,8 +64,8 @@ export default function CreateEvent() {
 
   return (
     <div className="min-h-screen bg-[#4A1F1F] text-white">
-    <Navbar/>
-      <div className="max-w-4xl mx-auto  p-6 bg-[#5C1E1E] rounded-lg shadow-md">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6 bg-[#5C1E1E] rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-center mb-6">Create Event</h1>
 
         {/* Event Banner */}
@@ -106,6 +147,9 @@ export default function CreateEvent() {
         >
           Create Event
         </button>
+
+        {/* Leaflet Map */}
+        <div id="map" className="w-full h-96 mt-6 rounded-lg"></div>
       </div>
     </div>
   );
