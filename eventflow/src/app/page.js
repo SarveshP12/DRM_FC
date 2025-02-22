@@ -38,14 +38,14 @@ export default function Home() {
     <div
       className="w-full min-h-screen overflow-auto"
       style={{
-        backgroundImage: "linear-gradient(to bottom, #541f3b 10%, #d78a42 90%)",
+        backgroundImage: "linear-gradient(to bottom, #541f3b 0%, #d78a42 20%)",
         backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-opacity-80">
+      <div className="fixed top-0 left-0 w-full">
         <Navbar />
       </div>
 
