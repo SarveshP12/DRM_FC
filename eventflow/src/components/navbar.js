@@ -9,7 +9,7 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <nav className="w-full px-4 flex justify-between items-center bg-white/10 backdrop-filter bg-blur fixed shadow-md">
+    <nav className="w-full px-4 flex justify-between items-center bg-white/10 fixed shadow-md">
       {/* Logo */}
       <Link href="/" className="text-[#e8b878] text-2xl font-bold">
         Event<span className="text-white">FLOW</span>
@@ -32,7 +32,7 @@ const Navbar = () => {
         {/* Create Event Button */}
         <button 
           onClick={() => router.push('/create-event')}
-          className="p-2 text-lg text-white bg-transparent border border-[#6a2c62] rounded-full hover:bg-[#d78a427f] transition-all"
+          className="p-2 text-lg text-white bg-transparent border border-[#6a2c625f] rounded-full hover:bg-[#d78a427f] transition-all"
         >
           Create Event
         </button>
@@ -40,12 +40,12 @@ const Navbar = () => {
         {/* Sign Up and Login Buttons */}
         <SignedOut>
           <SignUpButton mode="modal">
-            <button className="bg-[#6a2c62] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] transition-colors">
+            <button className="bg-[#6a2c625f] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] transition-colors">
               Sign Up
             </button>
           </SignUpButton>
           <SignInButton mode="modal">
-            <button className="bg-transparent border border-[#6a2c62] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] hover:text-white transition-colors">
+            <button className="bg-transparent border border-[#6a2c625f] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] hover:text-white transition-colors">
               Login
             </button>
           </SignInButton>

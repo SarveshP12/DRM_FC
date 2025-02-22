@@ -9,7 +9,7 @@ export default function Home() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       // Apply blur only if search bar overlaps navbar (60px)
-      setIsBlurred(scrollY > 60);
+      setIsBlurred(scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -20,25 +20,25 @@ export default function Home() {
     <div 
       className="w-full min-h-screen overflow-auto"
       style={{
-        backgroundImage: "linear-gradient(to bottom, #541f3b 10%, #d78a42 90%)",
+        backgroundImage: "linear-gradient(to bottom, #541f3b 0%, #d78a42 20%)",
         backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundPosition: "center"
       }}
     >
       {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-opacity-80">
+      <div className="fixed top-0 left-0 w-full">
         <Navbar />
       </div>
 
       {/* Main Content (Centered) */}
-      <div className="h-screen flex justify-center items-center text-white text-center px-4">
+      <div className="h-fit flex justify-center text-white text-center mt-20 px-4">
         {/* Search Bar */}
-        <div className={`w-full max-w-xl transition-all duration-300 ${isBlurred ? "blur-md opacity-60" : ""}`}>
+        <div className={`w-[500px] max-w-xl transition-all duration-300 ${isBlurred ? "blur-md opacity-60" : ""}`}>
           <input 
             type="text" 
             placeholder="Search for events..." 
-            className="w-full px-6 py-3 text-white placeholder-gray-300 rounded-full border-2 border-[#A0B4E5] shadow-md bg-transparent focus:outline-none focus:border-[#e8b878]"
+            className="w-full px-6 py-3 text-white placeholder-gray-300  rounded-full border-2 border-[#A0B4E5] shadow-md bg-transparent focus:outline-none focus:border-[#e8b878]"
           />
         </div>
       </div>
