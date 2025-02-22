@@ -1,9 +1,35 @@
+import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
+
 const Navbar = () => {
   return (
-    <nav className="w-full p-4 flex bg-transparent fixed ">
+    <nav className="w-full p-4 flex justify-between items-center bg-transparent fixed">
+      {/* Logo */}
       <h1 className="text-white text-2xl font-bold">
         Event<span className="text-[#6a2c62]">FLOW</span>
       </h1>
+
+      {/* Authentication Buttons */}
+      <div className="flex items-center gap-4">
+        {/* Show Sign Up and Login buttons if user is NOT signed in */}
+        <SignedOut>
+          <SignUpButton mode="modal">
+            <button className="bg-[#6a2c62] text-white px-4 py-2 rounded-md hover:bg-[#4a1e4a] transition-colors">
+              Sign Up
+            </button>
+          </SignUpButton>
+          <SignInButton mode="modal">
+            <button className="bg-transparent border border-[#6a2c62] text-[#6a2c62] px-4 py-2 rounded-md hover:bg-[#6a2c62] hover:text-white transition-colors">
+              Login
+            </button>
+          </SignInButton>
+        </SignedOut>
+
+        {/* Show User Button if user is signed in */}
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+      </div>
     </nav>
   );
 };
