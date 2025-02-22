@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/navbar";
 import L from "leaflet"; // Import Leaflet
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api"; // Import Convex API
 
 export default function CreateEvent() {
   const [eventName, setEventName] = useState("");
@@ -11,6 +13,10 @@ export default function CreateEvent() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [requireApproval, setRequireApproval] = useState(false);
+  const [coords, setCoords] = useState({ lat: 51.505, lon: -0.09 }); // Store lat/lon for event
+
+  // Convex mutation
+  const createEvent = useMutation(api.events.createEvent);
 
   // Leaflet Map Refs
   const mapRef = useRef(null);
@@ -19,30 +25,25 @@ export default function CreateEvent() {
   // Initialize Map
   useEffect(() => {
     if (!mapRef.current) {
-      // Create the map
-      mapRef.current = L.map("map").setView([51.505, -0.09], 13); // Default to London
-
-      // Add the tile layer (OpenStreetMap)
+      mapRef.current = L.map("map").setView([coords.lat, coords.lon], 13);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© OpenStreetMap contributors',
       }).addTo(mapRef.current);
-
-      // Add a default marker
-      markerRef.current = L.marker([51.505, -0.09]).addTo(mapRef.current);
+      markerRef.current = L.marker([coords.lat, coords.lon]).addTo(mapRef.current);
     }
   }, []);
 
   // Update Map Location When Location Input Changes
   useEffect(() => {
     if (location && mapRef.current && markerRef.current) {
-      // Geocode the address using Nominatim (OpenStreetMap)
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.length > 0) {
             const { lat, lon } = data[0];
-            mapRef.current.setView([lat, lon], 13); // Set map view to the new location
-            markerRef.current.setLatLng([lat, lon]); // Move the marker to the new location
+            setCoords({ lat, lon });
+            mapRef.current.setView([lat, lon], 13);
+            markerRef.current.setLatLng([lat, lon]);
           }
         })
         .catch((error) => {
@@ -51,15 +52,28 @@ export default function CreateEvent() {
     }
   }, [location]);
 
-  const handleCreateEvent = () => {
-    console.log({
-      eventName,
-      startDate,
-      endDate,
-      location,
-      description,
-      requireApproval,
-    });
+  const handleCreateEvent = async () => {
+    try {
+      const newEvent = {
+        title: eventName,
+        date: {
+          start: startDate,
+          end: endDate || null,
+          isFullDay: !startDate.includes("T"),
+        },
+        time: startDate.includes("T") ? startDate.split("T")[1] : null,
+        location: `${location} (${coords.lat}, ${coords.lon})`,
+        capacity: null, // Can be updated if needed
+        createdBy: "user-token-identifier", // Replace with actual user token
+        inviteLink: "generated-link", // Generate if needed
+        sharedMedia: [],
+      };
+
+      await createEvent(newEvent);
+      alert("Event created successfully!");
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
   };
 
   return (
