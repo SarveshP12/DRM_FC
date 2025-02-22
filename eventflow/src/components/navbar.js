@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
-import { Ticket, Calendar } from "lucide-react"; // Icons from Lucide-react
+import Link from "next/link";
+import { useRouter } from "next/navigation"; 
+import { Ticket, Calendar } from "lucide-react";
 import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 const Navbar = () => {
@@ -19,7 +21,7 @@ const Navbar = () => {
           <Ticket size={22} />
           <span className="text-sm">Events</span>
         </Link>
-        <Link href="/calendar" className="flex items-center space-x-1 cursor-pointer hover:text-white transition-all">
+        <Link href="/calender" className="flex items-center space-x-1 cursor-pointer hover:text-white transition-all">
           <Calendar size={22} />
           <span className="text-sm">Calendar</span>
         </Link>
@@ -28,7 +30,10 @@ const Navbar = () => {
       {/* Authentication Section */}
       <div className="flex items-center gap-6">
         {/* Create Event Button */}
-        <button className="p-2 text-lg text-white bg-transparent border border-[#6a2c62] rounded-full hover:bg-[#d78a427f] transition-all">
+        <button 
+          onClick={() => router.push('/create-event')}
+          className="p-2 text-lg text-white bg-transparent border border-[#6a2c62] rounded-full hover:bg-[#d78a427f] transition-all"
+        >
           Create Event
         </button>
 
