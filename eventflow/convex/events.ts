@@ -12,17 +12,28 @@ export const createEvent = mutation({
     time: v.optional(v.string()),
     location: v.string(),
     capacity: v.optional(v.number()),
-    createdBy: v.id("users"),
+    createdBy: v.string(),
+    inviteLink: v.string(),
+    sharedMedia: v.array(v.id("media")),
   },
   handler: async (ctx, args) => {
-    const inviteLink = `https://yourapp.com/invite/${crypto.randomUUID()}`;
-    return await ctx.db.insert("events", { ...args, inviteLink, sharedMedia: [] });
+    return await ctx.db.insert("events", args);
   },
 });
 
-export const getEvent = query({
+export const getEventsByUser = query({
+  args: { createdBy: v.string() },
+  handler: async (ctx, { createdBy }) => {
+    return await ctx.db
+      .query("events")
+      .withIndex("by_creator", (q) => q.eq("createdBy", createdBy))
+      .collect();
+  },
+});
+
+export const getEventById = query({
   args: { eventId: v.id("events") },
-  handler: async (ctx, args) => {
-    return await ctx.db.get(args.eventId);
+  handler: async (ctx, { eventId }) => {
+    return await ctx.db.get(eventId);
   },
 });
