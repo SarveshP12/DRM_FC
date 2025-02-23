@@ -1,28 +1,40 @@
 "use client";
-import React from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Ticket, Calendar, Bell } from "lucide-react";
-import { 
-  UserButton, 
-  SignedIn, 
-  SignedOut, 
-  SignInButton, 
-  SignUpButton, 
-  useAuth 
-} from "@clerk/nextjs";
+import Navbar from "../components/navbar";
+import { HomeIcon, CalendarIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
-const Navbar = () => {
+export default function Home() {
+  const [isBlurred, setIsBlurred] = useState(false);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("upcoming");
   const router = useRouter();
-  const { isSignedIn } = useAuth(); // Check if user is signed in
 
-  const handleCreateEvent = () => {
-    if (isSignedIn) {
-      router.push('/create-event');  // Redirect to create event page
-    } else {
-      router.push('/eventflow/src/app/create-event/page.js'); // Redirect to sign-in page if not logged in
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsBlurred(window.scrollY > 60);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    async function fetchRegisteredEvents() {
+      try {
+        const response = await fetch("/api/events/registered");
+        const data = await response.json();
+        setRegisteredEvents(data.events);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+    fetchRegisteredEvents();
+  }, []);
 
   return (
     <nav className="w-full px-4 flex justify-between items-center bg-white/10 fixed shadow-md">
@@ -43,42 +55,68 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Authentication Section */}
-      <div className="flex items-center gap-6">
-        {/* Notification Bell Icon */}
-        <button className="p-2 rounded-full hover:bg-[#d78a427f] transition-all">
-          <Bell size={22} className="text-white" />
-        </button>
+      {/* Main Content */}
+      <div className="min-h-screen flex flex-col justify-center items-center text-center px-6 space-y-12 pt-20">
+        {/* Welcome Section */}
+        <div className="flex flex-col items-center space-y-4">
+          <HomeIcon size={80} className="text-blue-400" />
+          <h1 className="text-5xl font-extrabold text-gray-100">Welcome to EventFLOW</h1>
+          <p className="text-gray-400 text-lg">Discover and create amazing events effortlessly!</p>
+        </div>
 
-        {/* Create Event Button */}
-        <button 
-          onClick={handleCreateEvent}
-          className="p-2 text-sm text-white bg-transparent border border-[#6a2c62] rounded-full hover:bg-[#d78a427f] transition-all my-4"
-        >
-          Create Event
-        </button>
+        {/* Tabs Section */}
+        <div className="w-full max-w-4xl">
+          <div className="flex justify-between items-center bg-gray-800 shadow-lg p-4 rounded-xl">
+            <h2 className="text-2xl font-bold text-gray-100">Your Registered Events</h2>
+            <div className="relative flex space-x-4 bg-gray-700 p-2 rounded-lg overflow-hidden">
+              {['upcoming', 'past'].map((tabName) => (
+                <motion.button
+                  key={tabName}
+                  onClick={() => setTab(tabName)}
+                  className={`relative z-10 px-5 py-2 transition-all rounded-lg font-medium text-lg ${
+                    tab === tabName ? "text-white bg-blue-600 shadow-md" : "text-gray-300"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  animate={{ x: tab === "upcoming" ? 0 : 100 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {tabName.charAt(0).toUpperCase() + tabName.slice(1)}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </div>
 
-        {/* Sign Up and Login Buttons */}
-        <SignedOut>
-          <SignUpButton mode="modal">
-            <button className="bg-[#6a2c625f] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] transition-colors">
-              Sign Up
-            </button>
-          </SignUpButton>
-          <SignInButton mode="modal">
-            <button className="bg-transparent border border-[#6a2c625f] text-white p-2 my-2 rounded-full hover:bg-[#d78a427f] hover:text-white transition-colors">
-              Login
-            </button>
-          </SignInButton>
-        </SignedOut>
+        {/* Registered Events List */}
+        <div className="w-full max-w-4xl">
+          {loading ? (
+            <p className="text-gray-400 text-lg text-center mt-4">Loading...</p>
+          ) : registeredEvents.length > 0 ? (
+            <ul className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {registeredEvents.map((event) => (
+                <li
+                  key={event.id}
+                  className="p-6 bg-gray-800 rounded-xl shadow-lg flex flex-col items-start space-y-2 border border-gray-700 hover:shadow-xl transition"
+                >
+                  <h3 className="text-xl font-semibold text-gray-100">{event.name}</h3>
+                  <p className="text-gray-400 text-sm">{event.date}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-400 text-lg text-center mt-4">No events registered yet.</p>
+          )}
+        </div>
 
-        {/* User Button */}
-        <SignedIn>
-          <UserButton afterSignOutUrl="/" />
-        </SignedIn>
+        {/* No Upcoming Events Section */}
+        {!loading && registeredEvents.length === 0 && (
+          <div className="flex flex-col items-center mt-10 space-y-4">
+            <CalendarIcon size={100} className="text-gray-500" />
+            <h2 className="text-2xl font-semibold text-gray-100">No Upcoming Events</h2>
+            <p className="text-gray-400 text-lg">You have no upcoming events. Why not host one?</p>
+          </div>
+        )}
       </div>
-    </nav>
+    </div>
   );
-};
-
-export default Navbar;
+}
