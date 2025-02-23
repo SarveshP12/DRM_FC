@@ -63,7 +63,7 @@ export default function CreateEvent() {
         },
         time: startDate.includes("T") ? startDate.split("T")[1] : null,
         location: `${location} (${coords.lat}, ${coords.lon})`,
-        capacity: null, // Can be updated if needed
+        capacity: 50,
         createdBy: "user-token-identifier", // Replace with actual user token
         inviteLink: "generated-link", // Generate if needed
         sharedMedia: [],
