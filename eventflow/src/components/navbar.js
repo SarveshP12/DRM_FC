@@ -27,7 +27,7 @@ const Navbar = () => {
   return (
     <nav className="w-full px-4 flex justify-between items-center bg-white/10 fixed shadow-md">
       {/* Logo */}
-      <Link href="/" className="text-[#e8b878] text-2xl font-bold">
+      <Link href="/" className="text-blue-400 text-2xl font-bold">
         Event<span className="text-white">FLOW</span>
       </Link>
 

@@ -35,7 +35,7 @@ export default function EventPage() {
       endTime: "4:00 PM",
       location: "Downtown Convention Center",
       description: "Join us for an exciting day of networking, talks, and innovation!",
-      eventURL: "http://localhost:3000/invite",
+      eventURL: "https://localhost:3000/invite",
     };
 
     setIsSending(true);
@@ -68,27 +68,6 @@ export default function EventPage() {
       </div>
 
       <div className="min-h-screen flex flex-col items-center px-6 space-y-6 pt-24">
-        <div className="w-full max-w-4xl px-4">
-          <div className="flex justify-between items-center bg-gray-800 shadow-lg p-4 rounded-xl">
-            <h2 className="text-2xl font-bold text-gray-100">Your Registered Events</h2>
-            <div className="flex space-x-4 bg-gray-700 p-2 rounded-lg">
-              {["upcoming", "past"].map((tabName) => (
-                <motion.button
-                  key={tabName}
-                  onClick={() => setTab(tabName)}
-                  className={`px-5 py-2 transition-all rounded-lg font-medium text-lg ${
-                    tab === tabName ? "text-white bg-blue-600 shadow-md" : "text-gray-300"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  {tabName.charAt(0).toUpperCase() + tabName.slice(1)}
-                </motion.button>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="w-full max-w-4xl p-6 bg-gray-800 rounded-xl shadow-lg flex flex-col space-y-4 border border-gray-700 hover:shadow-xl transition">
           <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div className="space-y-1">

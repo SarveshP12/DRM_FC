@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import Navbar from "@/components/navbar";
+import Navbar from "../../components/navbar";
 import L from "leaflet"; // Import Leaflet
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import { useMutation } from "convex/react";
